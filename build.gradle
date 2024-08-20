@@ -38,9 +38,11 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api
-compileOnly group: 'jakarta.servlet.jsp', name: 'jakarta.servlet.jsp-api', version: '4.0.0'
+	compileOnly group: 'jakarta.servlet.jsp', name: 'jakarta.servlet.jsp-api', version: '4.0.0'
 	// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper
-implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '11.0.0-M24'
+	implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '11.0.0-M24'
+	// https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api
+	compileOnly group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.1.0'
 	
 
 }	
