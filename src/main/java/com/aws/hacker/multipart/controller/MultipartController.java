@@ -23,15 +23,35 @@ public class MultipartController {
     @RequestMapping("/upload")
     public ResponseEntity<float[]> uploadImg(@RequestPart List<MultipartFile> files) {
         MultipartFile uploadedFile = files.get(0);
+        System.out.println(uploadedFile.getOriginalFilename());
+
         // Flask 서버에 파일을 전송하고 예측 결과를 받습니다.
         float[] predictions = tensorFlowService.predict(uploadedFile);
+
         // 예측 결과를 클라이언트로 전송합니다.
-        return ResponseEntity.ok(predictions);
+        System.out.println("Predictions: " + predictions.length + " values");
+
+        // 첫 번째 모델의 예측 값 처리 (단일 값)
+        if (predictions.length == 1) {
+            return ResponseEntity.ok(predictions);
+        }
+        else{
+            return ResponseEntity.ok(predictions);
+        }
     }
-    
+
     @GetMapping("/")
     public ModelAndView index() {
-    	return new ModelAndView("index");
+        return new ModelAndView("index");
     }
-    
+
+    private float calculatePercentile(float n, float min, float max) {
+        if (n < min) {
+            return 0;
+        }
+        if (n > max) {
+            return 100;
+        }
+        return 100 - ((n - min) / (max - min) * 100);
+    }
 }
