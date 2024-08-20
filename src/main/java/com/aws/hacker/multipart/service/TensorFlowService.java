@@ -1,39 +1,49 @@
 package com.aws.hacker.multipart.service;
 
-import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.tensorflow.Graph;
-import org.tensorflow.Session;
-import org.tensorflow.Tensor;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpMethod;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.FloatBuffer;
 
 @Service
 public class TensorFlowService {
-    private Graph graph;
-    private Session session;
 
-    public TensorFlowService() {
-        // 모델 파일을 불러와 그래프를 생성합니다.
-        try (InputStream is = getClass().getResourceAsStream("/model.pb")) {
-            graph = new Graph();
-            graph.importGraphDef(IOUtils.toByteArray(is));
-            session = new Session(graph);
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final String flaskServerUrl = "http://localhost:5000/predict";
+
+    public float[] predict(MultipartFile file) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            // 파일을 Flask 서버로 전송
+            Resource resource = new ByteArrayResource(file.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return file.getOriginalFilename();
+                }
+            };
+
+            HttpEntity<Resource> requestEntity = new HttpEntity<>(resource, headers);
+
+            ResponseEntity<float[]> responseEntity = restTemplate.exchange(
+                    flaskServerUrl,
+                    HttpMethod.POST,
+                    requestEntity,
+                    float[].class
+            );
+
+            return responseEntity.getBody();
         } catch (IOException e) {
-            throw new RuntimeException("모델 파일을 불러올 수 없습니다.", e);
-        }
-    }
-
-    // 입력 데이터를 사용하여 머신 러닝 모델을 실행하고 결과를 반환합니다.
-    public float[] predict(float[] inputData) {
-        try (Tensor<Float> input = Tensor.create(new long[]{1, inputData.length}, FloatBuffer.wrap(inputData));
-             Tensor<Float> output = session.runner().feed("input", input).fetch("output").run().get(0).expect(Float.class))
-        {
-            float[] result = new float[output.numElements()];
-            output.copyTo(result);
-            return result;
+            throw new RuntimeException("파일을 Flask 서버로 전송하는 중 오류가 발생했습니다.", e);
         }
     }
 }

@@ -13,40 +13,29 @@ java {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.tensorflow/tensorflow
-    implementation group: 'org.tensorflow', name: 'tensorflow', version: '1.15.0'
-
-
-    // https://mvnrepository.com/artifact/com.antkorwin/ioutils
-    implementation group: 'com.antkorwin', name: 'ioutils', version: '0.8'
-
+    // Spring Boot Web Starter for building web applications
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // Commons IO for file and stream handling
+    implementation 'commons-io:commons-io:2.8.0'
 
+    // Lombok for reducing boilerplate code
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // Swagger
+
+    // Swagger for API documentation
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
+    // Spring Boot Test Starter for testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-
 }
 
 tasks.named('test') {
