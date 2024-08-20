@@ -2,6 +2,7 @@ package com.aws.hacker.multipart.controller;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +17,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MultipartController {
 
     private final TensorFlowService tensorFlowService;
 
     @RequestMapping("/upload")
-    public ResponseEntity<float[]> uploadImg(@RequestPart List<MultipartFile> files) {
+    public ResponseEntity<Integer> uploadImg(@RequestPart List<MultipartFile> files) {
         MultipartFile uploadedFile = files.get(0);
         System.out.println(uploadedFile.getOriginalFilename());
 
@@ -33,10 +35,18 @@ public class MultipartController {
 
         // 첫 번째 모델의 예측 값 처리 (단일 값)
         if (predictions.length == 1) {
-            return ResponseEntity.ok(predictions);
+            return ResponseEntity.ok(0);
         }
         else{
-            return ResponseEntity.ok(predictions);
+            int max = -1;
+            int index = 0;
+            for(int i = 0 ; i < predictions.length ; i++) {
+                if(predictions[i] > max) {
+                    index = i;
+                }
+            }
+            index++;
+            return ResponseEntity.ok(index);
         }
     }
 
