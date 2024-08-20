@@ -24,6 +24,13 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.tensorflow/tensorflow
+    implementation group: 'org.tensorflow', name: 'tensorflow', version: '1.15.0'
+
+
+    // https://mvnrepository.com/artifact/com.antkorwin/ioutils
+    implementation group: 'com.antkorwin', name: 'ioutils', version: '0.8'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     compileOnly 'org.projectlombok:lombok'
