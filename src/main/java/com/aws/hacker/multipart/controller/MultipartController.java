@@ -1,14 +1,17 @@
 package com.aws.hacker.multipart.controller;
 
-import com.aws.hacker.multipart.service.TensorFlowService;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.aws.hacker.multipart.service.TensorFlowService;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,4 +27,10 @@ public class MultipartController {
         // 예측 결과를 클라이언트로 전송합니다.
         return ResponseEntity.ok(predictions);
     }
+    
+    @GetMapping("/")
+    public String index() {
+    	return "index";
+    }
+    
 }
